@@ -1,0 +1,93 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model CodingChallenge.Models.InputViewModel
+
+<div>
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+    </div>
+
+    @using (Html.BeginForm("ExecuteProcess", "DocumentCorpus", FormMethod.Post))
+    {
+        <div class="m-2">
+            <label class="m-2">Input Path</label>
+            @Html.TextBoxFor(m => m.Path, new { @class = "form-control m-2" })
+            <div class="text-danger">
+                @Html.ValidationMessageFor(m => m.Path)
+            </div>
+            
+            <div>
+                <button type="submit" class="btn btn-primary m-2">Submit</button>
+            </div>
+        </div>
+    }
+
+    <div class="m-2">
+        <label class="m-2">Input word for Entire Corpus Search</label>
+        <input type="text" id="wordCorpus" class="form-control m-2">
+        <button id="searchCorpusBtn" class="btn btn-primary m-2">Search</button>
+        <div id="corpusResult" class="alert alert-info" style="display:none;"></div>
+    </div>
+
+    <div class="m-2">
+        <label class="m-2">Input word for per document Search</label>
+        <input type="text" id="wordFiles" class="form-control m-2">
+        <button id="searchFilesBtn" class="btn btn-primary m-2">Search</button>
+        <div id="filesResult" class="alert alert-success" style="display:none;"></div>
+    </div>
+
+    @using (Html.BeginForm("ClearDatabase", "DocumentCorpus", FormMethod.Post))
+    {
+        <div class="m-2">
+            <div>
+                <button type="submit" class="btn btn-primary m-2">Clear Database</button>
+            </div>
+        </div>
+    }
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#searchCorpusBtn").click(function () {
+            let word = $("#wordCorpus").val();
+
+            $.ajax({
+                dataType: "json",
+                contentType: "application/json",
+                type: "GET",
+                url: "/general/" + word,
+                traditional: true,
+                data: JSON.stringify(word),
+                success: function (data) {
+                    $("#corpusResult").html("<strong>Word Count in Corpus:</strong> " + data.wordCount);
+                    $("#corpusResult").show();
+                }
+            });
+        });
+
+        $("#searchFilesBtn").click(function () {
+            let word = $("#wordFiles").val();
+            $.ajax({
+                dataType: "json",
+                contentType: "application/json",
+                type: "GET",
+                url: "/specific/" + word,
+                traditional: true,
+                success:  function (data) {
+                    let resultHtml = "<h3>Word Appearances per File:</h3><ul>";
+
+                    data.forEach(function (item) {
+                        resultHtml += "<li><strong>File:</strong> " + item.fileName + ", <strong>Count:</strong> " + item.wordCount + "</li>";
+                    });
+
+                    resultHtml += "</ul>";
+
+                    $("#filesResult").html(resultHtml);
+                    $("#filesResult").show();
+                }
+            });
+        });
+    });
+</script>

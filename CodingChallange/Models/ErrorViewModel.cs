@@ -1,4 +1,4 @@
-namespace CodingChallange.Models;
+namespace CodingChallenge.Models;
 
 public class ErrorViewModel
 {
