@@ -157,10 +157,10 @@ public static class FilesProcessor
         return wordsList;
     }
     
-    static async Task<List<string>> ParseHtmlFile(string htmlContent)
+    static async Task<List<string>> ParseHtmlFile(string path)
     {
         var parser = new HtmlParser();
-        var document = await parser.ParseDocumentAsync(htmlContent);
+        var document = await parser.ParseDocumentAsync(path);
 
         string text = ExtractTextFromHtml(document);
 

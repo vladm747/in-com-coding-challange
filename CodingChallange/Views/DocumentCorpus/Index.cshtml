@@ -25,14 +25,14 @@
 
     <div class="m-2">
         <label class="m-2">Input word for Entire Corpus Search</label>
-        <input type="text" id="wordCorpus" class="form-control m-2">
+        <input type="text" required id="wordCorpus" class="form-control m-2">
         <button id="searchCorpusBtn" class="btn btn-primary m-2">Search</button>
         <div id="corpusResult" class="alert alert-info" style="display:none;"></div>
     </div>
 
     <div class="m-2">
         <label class="m-2">Input word for per document Search</label>
-        <input type="text" id="wordFiles" class="form-control m-2">
+        <input type="text" required id="wordFiles" class="form-control m-2">
         <button id="searchFilesBtn" class="btn btn-primary m-2">Search</button>
         <div id="filesResult" class="alert alert-success" style="display:none;"></div>
     </div>
@@ -52,7 +52,12 @@
     $(document).ready(function () {
         $("#searchCorpusBtn").click(function () {
             let word = $("#wordCorpus").val();
-
+            
+            if (word === "" || word === null) {
+                alert("Please enter a word to search.");
+                return;
+            }
+            
             $.ajax({
                 dataType: "json",
                 contentType: "application/json",
@@ -69,6 +74,12 @@
 
         $("#searchFilesBtn").click(function () {
             let word = $("#wordFiles").val();
+            
+            if (word === "" || word === null) {
+                alert("Please enter a word to search.");
+                return;
+            }
+
             $.ajax({
                 dataType: "json",
                 contentType: "application/json",
