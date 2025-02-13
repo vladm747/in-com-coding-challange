@@ -159,8 +159,10 @@ public static class FilesProcessor
     
     static async Task<List<string>> ParseHtmlFile(string path)
     {
+        string htmlContent = await File.ReadAllTextAsync(path);
+
         var parser = new HtmlParser();
-        var document = await parser.ParseDocumentAsync(path);
+        var document = await parser.ParseDocumentAsync(htmlContent);
 
         string text = ExtractTextFromHtml(document);
 
@@ -178,6 +180,6 @@ public static class FilesProcessor
             element.Remove();
         }
 
-        return document.Body.TextContent;
+        return document.Body?.TextContent.Trim() ?? string.Empty;
     }
 }
